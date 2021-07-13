@@ -1,0 +1,183 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>+microstate toolbox basics</title><meta name="generator" content="MATLAB 9.8"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-03-01"><meta name="DC.source" content="documentation.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>+microstate toolbox basics</h1><!--introduction--><p>This documentation will go over some basics of the +microstate toolbox. The +microstate toolbox was written for microstate analysis of EEG or MEG data in sensor- or source-space. Algorithms used by +microstate are described in [1,2]. Please cite these papers when using the +microstate toolbox.</p><p>[1] Tait and Zhang (2021) <i>+microstate: A Matlab toolbox for brain microstate analysis in sensor and cortical EEG/MEG</i>, in preparation</p><p>[2] Tait and Zhang (2021) <i>Cortical imaging of brain electrophysiological microstates from source space magnetoencephalography</i>, in preparation</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Installation</a></li><li><a href="#2">The "individual" object</a></li><li><a href="#10">The "cohort" object</a></li></ul></div><h2 id="1">Installation</h2><p>+microstate runs in Matlab, and is compatible with Matlab R2017b or higher. +microstate can be downladed from the toolbox <a href="https://www.github.com/lukewtait/microstate_toolbox">Github page</a>. To use the toolbox, the folder +microstate must be in a directory on the Matlab path. However, +microstate itself (as a package folder) should not be added to the path.</p><h2 id="2">The "individual" object</h2><p>The microstate.individual object stores data from an individual scan/trial etc. An empty individual object can be called using the command below:</p><pre class="language-matlab">ms = microstate.individual ;
+</pre><p>The microstate.individual object has various properties. For example, ms.data contains the MEG/EEG/source/amplitude envelope data. It also has many different methods. For example, ms = ms.preprocess_filter(1,30) will bandpass filter the data in the 1-30 Hz band. A list of properties and methods associated with the microstate.individual class are included in the documentation, which is accessed via the following command:</p><pre class="language-matlab">doc <span class="string">microstate.individual</span>
+</pre><p>Some simple functions are:</p><pre class="language-matlab">ms = ms.add_data(data,modality,time) ; <span class="comment">% add data to the object</span>
+ms = ms.preprocess ; <span class="comment">% run a default preprocessing pipeline</span>
+ms = ms.cluster_estimatemaps(k) ; <span class="comment">% perform microstate analysis for k states</span>
+ms = ms.cluster_koptimum ; <span class="comment">% perform microstate analysis for 2-20 states and select the optimum</span>
+ms = ms.networks_wpli ; <span class="comment">% calculate microstate functional connectivity</span>
+ms = ms.stats_all ; <span class="comment">% calculate microstate statistics</span>
+ms = ms.simulate ; <span class="comment">% simulate data using a default pipeline</span>
+ms.plot(<span class="string">'string'</span>) ; <span class="comment">% visualization</span>
+</pre><p>Some of the main properties of interest are:</p><pre class="language-matlab">ms.maps <span class="comment">% the microstate maps</span>
+ms.label <span class="comment">% the microstate sequence</span>
+ms.stats <span class="comment">% a structure of microstate statistics</span>
+</pre><h2 id="10">The "cohort" object</h2><p>The microstate.cohort object stores data from multiple scans/trials. An empty cohort object can be called using the command below:</p><pre class="language-matlab">coh = cohort.individual ;
+</pre><p>Like the microstate.individual object, the the microstate.cohort object also has various properties and methods. A list of properties and methods associated with the microstate.cohort class are included in the documentation, which is accessed via the following command:</p><pre class="language-matlab">doc <span class="string">microstate.cohort</span>
+</pre><p>Some simple functions are:</p><pre class="language-matlab">coh = coh.add_individuals(individual,condition,storage) ; <span class="comment">% add individual to the object</span>
+coh = coh.cluster_global(k) ; <span class="comment">% perform group-level microstate analysis for k states</span>
+coh = coh.cluster_globalkoptimum ; <span class="comment">% perform group-level microstate analysis for 2-20 states and select the optimum</span>
+coh = coh.ind_stats_all ; <span class="comment">% calculate statistics of microstates for each individual</span>
+coh = coh.cohort_stats ; <span class="comment">% concatenate individual statistics to group level</span>
+coh.plot(<span class="string">'string'</span>) ; <span class="comment">% visualization</span>
+</pre><p>Some of the main properties of interest are:</p><pre class="language-matlab">coh.globalmaps <span class="comment">% the group-level microstate maps</span>
+coh.stats <span class="comment">% a structure of group-level microstate statistics</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% +microstate toolbox basics
+% This documentation will go over some basics of the +microstate
+% toolbox. The +microstate toolbox was written for microstate analysis of
+% EEG or MEG data in sensor- or source-space. Algorithms used by
+% +microstate are described in [1,2]. Please cite these papers when using
+% the +microstate toolbox. 
+% 
+% [1] Tait and Zhang (2021) _+microstate: A Matlab toolbox for brain
+% microstate analysis in sensor and cortical EEG/MEG_, in preparation 
+% 
+% [2] Tait and Zhang (2021) _Cortical imaging of brain electrophysiological
+% microstates from source space magnetoencephalography_, in preparation
+
+%% Installation
+% +microstate runs in Matlab, and is compatible with Matlab R2017b or
+% higher. +microstate can be downladed from the toolbox
+% <https://www.github.com/lukewtait/microstate_toolbox Github page>. To use
+% the toolbox, the folder +microstate must be in a directory on the Matlab
+% path. However, +microstate itself (as a package folder) should not be
+% added to the path.
+
+%% The "individual" object
+% The microstate.individual object stores data from an individual
+% scan/trial etc. An empty individual object can be called using the
+% command below: 
+%%%
+%   ms = microstate.individual ; 
+
+%%% 
+% The microstate.individual object has various properties. For example,
+% ms.data contains the MEG/EEG/source/amplitude envelope data. It also has
+% many different methods. For example, ms = ms.preprocess_filter(1,30) will
+% bandpass filter the data in the 1-30 Hz band. A list of properties and
+% methods associated with the microstate.individual class are included in
+% the documentation, which is accessed via the following command:
+%%%
+%   doc microstate.individual
+
+%%% 
+% Some simple functions are: 
+%%%
+%   ms = ms.add_data(data,modality,time) ; % add data to the object
+%   ms = ms.preprocess ; % run a default preprocessing pipeline
+%   ms = ms.cluster_estimatemaps(k) ; % perform microstate analysis for k states
+%   ms = ms.cluster_koptimum ; % perform microstate analysis for 2-20 states and select the optimum
+%   ms = ms.networks_wpli ; % calculate microstate functional connectivity
+%   ms = ms.stats_all ; % calculate microstate statistics
+%   ms = ms.simulate ; % simulate data using a default pipeline
+%   ms.plot('string') ; % visualization
+
+%%%
+% Some of the main properties of interest are: 
+%%%
+%   ms.maps % the microstate maps
+%   ms.label % the microstate sequence
+%   ms.stats % a structure of microstate statistics
+
+
+%% The "cohort" object
+% The microstate.cohort object stores data from multiple scans/trials. An
+% empty cohort object can be called using the command below: 
+%%%
+%   coh = cohort.individual ; 
+
+%%% 
+% Like the microstate.individual object, the the microstate.cohort object
+% also has various properties and methods. A list of properties and methods
+% associated with the microstate.cohort class are included in the
+% documentation, which is accessed via the following command:
+%%%
+%   doc microstate.cohort
+
+%%% 
+% Some simple functions are: 
+%%%
+%   coh = coh.add_individuals(individual,condition,storage) ; % add individual to the object
+%   coh = coh.cluster_global(k) ; % perform group-level microstate analysis for k states
+%   coh = coh.cluster_globalkoptimum ; % perform group-level microstate analysis for 2-20 states and select the optimum
+%   coh = coh.ind_stats_all ; % calculate statistics of microstates for each individual
+%   coh = coh.cohort_stats ; % concatenate individual statistics to group level
+%   coh.plot('string') ; % visualization
+
+%%%
+% Some of the main properties of interest are: 
+%%%
+%   coh.globalmaps % the group-level microstate maps
+%   coh.stats % a structure of group-level microstate statistics
+##### SOURCE END #####
+--></body></html>
