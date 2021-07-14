@@ -131,7 +131,8 @@ classdef individual
         
         % FIELDTRIP ---
         function obj = import_fieldtrip(obj,data,varargin)
-            
+            % Function to import data from Fieldtrip.
+	    
             % Check data is a struct
             if ~isstruct(data)
                 error('Data type is not a fieldtrip raw, timelock, source, or dip structure. See Fieldtrip functions ft_datatype_raw, ft_datatype_timelock, ft_datatype_source, ft_datatype dip for details.')
