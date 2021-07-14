@@ -1,4 +1,5 @@
 function trls = define_trials(obj,varargin) ; 
+% Segment a single dataset into trials based on either a fixed length or stimulus times.
 
 % Useage: 
 % ms = ms.define_trials(epoch_length) ; % splits into trials of length
