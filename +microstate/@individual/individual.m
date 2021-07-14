@@ -336,7 +336,8 @@ classdef individual
         
         % SPM ---
         function obj = import_spm_meeg(obj,D,varargin)
-            
+            % Function to import SPM M/EEG objects. 
+	    
             % Check what type of data we have
             ishdr = isa(D,'struct') ; % hdr
             ismeeg = isa(D,'meeg') ; % meeg object
@@ -601,6 +602,7 @@ classdef individual
         
         % ---- SPM IMAGES ----
         function obj = import_spm_nifti(obj,filename,fsample,zthresh) ; 
+	    % Function to import NiFTi images. 
             
             if nargin < 3
                 error('Sample rate must be provided to read SPM/NiFTi images. Useage individual.import_spm_nifti(filename,sample_rate)')
@@ -652,7 +654,7 @@ classdef individual
         
         % ---- EEGLAB ----
         function obj = import_eeglab(obj,EEG,varargin) ; 
-            % Function to import data from EEGLab
+            % Function to import data from EEGLab.
             
             idxmodality = find(strcmp(varargin,'modality')) ; 
             if ~isempty(idxmodality)
@@ -678,7 +680,7 @@ classdef individual
         
         % ---- LORETA (SOURCE ONLY) ----
         function obj = import_loreta(obj,filename,fsample)
-            % Function to import source reconstructions from LORETA or sLORETA/eLORETA software
+            % Function to import source reconstructions from LORETA or sLORETA/eLORETA software.
             % 
             % Much of this function is modified from Fieldtrip function
             % loreta2fieldtrip
