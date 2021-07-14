@@ -120,6 +120,7 @@ classdef individual
         end
         
         function s = export_struct(obj)
+	    % Export microstate.individual object's properties to a MATLAB structure.
             f = fieldnames(obj) ;
             s = struct ; 
             for i = 1:length(f)
