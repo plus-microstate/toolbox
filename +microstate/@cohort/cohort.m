@@ -274,7 +274,8 @@ classdef cohort
         end % finished with add_individuals
         
         function obj = delete_individuals(obj,ind)
-           
+            % Delete an individual from the microstate.cohort object. 
+	    
             ind = sort(ind,'descend') ; 
             for i = 1:length(ind)
                 obj.individual(ind(i)) = [] ; 
