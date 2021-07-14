@@ -678,8 +678,7 @@ classdef individual
         
         % ---- LORETA (SOURCE ONLY) ----
         function obj = import_loreta(obj,filename,fsample)
-            % Function to import source reconstructions from LORETA or
-            % sLORETA/eLORETA software
+            % Function to import source reconstructions from LORETA or sLORETA/eLORETA software
             % 
             % Much of this function is modified from Fieldtrip function
             % loreta2fieldtrip
