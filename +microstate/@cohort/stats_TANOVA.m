@@ -1,5 +1,5 @@
 function p = stats_TANOVA(obj,design,maps,varargin)
-% Perform cluster permutation TANOVA analysis
+% Perform TANOVA analysis on clustered maps
 
 %% Check inputs
 % Check multiple conditions appear in the data
