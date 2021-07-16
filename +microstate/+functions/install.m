@@ -104,7 +104,6 @@ switch option
             if dodownload
                 
                 fprintf('Downloading file %s\n',versionmatfiles{mat,3}) ; 
-                
                 websave(versionmatfiles{mat,1},versionmatfiles{mat,3},webopts) ; 
             end
             
@@ -119,12 +118,11 @@ switch option
             
             dodownload = versionmatfiles{mat,2} ; 
             if dodownload
+                
+                fprintf('Downloading file %s\n',versionmatfiles{mat,3}) ; 
                 websave(versionmatfiles{mat,1},versionmatfiles{mat,3},webopts) ; 
             end
             
         end
         
 end    
-            
-        
-        
