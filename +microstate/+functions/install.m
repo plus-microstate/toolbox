@@ -27,7 +27,8 @@ switch option
         
         % Get latest version
         tmpfile = sprintf('tmp%09d-DO-NOT-DELETE.txt',randi(10^9-1)) ; 
-        websave(fullfile(fileparts(path),tmpfile),'https://raw.githubusercontent.com/plus-microstate/toolbox/master/%2Bmicrostate/%2Bfunctions/toolbox_path.m',webopts) ; 
+        tmpfile = fullfile(fileparts(path),tmpfile) ; 
+        websave(tmpfile,'https://raw.githubusercontent.com/plus-microstate/toolbox/master/%2Bmicrostate/%2Bfunctions/toolbox_path.m',webopts) ; 
         fid = fopen(fullfile(fileparts(path),tmpfile)) ; 
         str = fscanf(fid,'%s') ; 
         fclose(fid) ; 
