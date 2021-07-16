@@ -38,10 +38,11 @@ switch option
         
         if strcmpi(newestversion,currentversion)
             % do not need to update any files
+            fprintf('Current version (%s) up to date...\n',newestversion)
             
         else % update the files which need updating
             
-            disp('Downloading latest version of +microstate...')
+            fprintf('Updating +microstate from version %s to %s...\n',currentversion,newestversion)
             
             tmpfile = sprintf('update-file-tmp%09d-DO-NOT-DELETE.zip',randi(10^9-1)) ; 
             tmpfile = fullfile(fileparts(path),tmpfile) ; 
@@ -69,6 +70,8 @@ switch option
                 if ~isempty(regexp(filename,'example\d_data.mat'))
                     continue
                 end
+                
+                fprintf('Updating file %s\n',filename) ; 
                 
                 % Download
                 replacefilename = strsplit(filename,filesep) ; replacefilename = strjoin(replacefilename(2:end),filesep) ; 
@@ -99,6 +102,9 @@ switch option
             
             dodownload = ~versionmatfiles{mat,2} || (versionmatfiles{mat,2} && strcmp(option,'full')) ; 
             if dodownload
+                
+                fprintf('Downloading file %s\n',versionmatfiles{mat,3}) ; 
+                
                 websave(versionmatfiles{mat,1},versionmatfiles{mat,3},webopts) ; 
             end
             
