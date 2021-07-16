@@ -26,15 +26,15 @@ switch option
         [path,currentversion] = microstate.functions.toolbox_path ; 
         
         % Get latest version
-        tmpfile = sprintf('tmp%09d-DO-NOT-DELETE.txt',randi(10^9-1)) ; 
+        tmpfile = sprintf('tmp%09d.txt',randi(10^9-1)) ; 
         tmpfile = fullfile(fileparts(path),tmpfile) ; 
         websave(tmpfile,'https://raw.githubusercontent.com/plus-microstate/toolbox/master/%2Bmicrostate/%2Bfunctions/toolbox_path.m',webopts) ; 
-        fid = fopen(fullfile(fileparts(path),tmpfile)) ; 
+        fid = fopen(tmpfile) ; 
         str = fscanf(fid,'%s') ; 
         fclose(fid) ; 
         delete(tmpfile) ; 
-        newestversion = regexp(str,"version='v*.*'",'match') ; 
-        newestversion = newestversion{1}(10:end-1) ; 
+        newestversion = regexp(str,"v\d.\d",'match') ; 
+        newestversion = newestversion{1} ; 
         
         if strcmpi(newestversion,currentversion)
             % do not need to update any files
