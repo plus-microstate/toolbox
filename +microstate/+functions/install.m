@@ -2,26 +2,29 @@ function install(option)
 % Function to install the latest version of the toolbox. 
 % 
 % Useage: 
-% microstate.functions.install or microstate.functions.install('full') to
-% run an update and full install. 
+% microstate.functions.install('full') to run an update and full install. 
 % 
-% microstate.functions.install('-data') to not include
+% microstate.functions.install('-data') to not include large files, e.g. 
 % example data for tutorials in download to reduce file size. 
 % 
 % microstate.functions.install('data') to only install example data.
 % 
 % microstate.functions.install(filepath) to download the most recent
 % version of a particular file, where filepath is the path to the file. 
+% 
+% RECOMMENDED: 
+% microstate.functions.install with no arguments will run full install
+% first time and then -data all other times.
 
 if nargin<1
-     option = 'full' ; 
+     option = 'default' ; 
 end
 option = lower(option) ; 
 webopts = weboptions('Timeout',120);
 
 switch option
     %% Full install
-    case {'full','-data'}
+    case {'full','-data','default'}
         % Get path to toolbox and current version
         [path,currentversion] = microstate.functions.toolbox_path ; 
         
@@ -67,7 +70,7 @@ switch option
                 end
                 
                 % Skip example data
-                if ~isempty(regexp(filename,'example\d_data.mat'))
+                if contains(filename,'.mat') && ~isempty(regexp(filename,'example\d_','ONCE'))
                     continue
                 end
                 
@@ -91,38 +94,42 @@ switch option
         end
         
         % Deal with .mat files
-        if strcmp(option,'full')
-            disp('Downloading files from GitHub-lfs including tutorial data files...')
-        elseif strcmp(option,'-data')
-            disp('Downloading files from GitHub-lfs excluding tutorial data files...')
+        switch option
+            case 'full'
+                disp('Downloading files from GitHub-lfs including tutorial data files...')
+                [~,~,versionmatfiles] = microstate.functions.toolbox_path ;
+                for mat = 1:size(versionmatfiles,1)
+                    fprintf('Downloading file %s\n',versionmatfiles{mat,3}) ; 
+                    websave(versionmatfiles{mat,1},versionmatfiles{mat,3},webopts) ; 
+                end
+            case '-data'
+                % disp('Downloading files from GitHub-lfs excluding tutorial data files...')
+                % do nothing, already installed
+            case 'default'
+                hasprintedmsg = false ; 
+                [~,~,versionmatfiles] = microstate.functions.toolbox_path ;
+                for mat = 1:size(versionmatfiles,1)
+                    localfileinfo = dir(versionmatfiles{mat,1}) ; 
+                    localfilesize = localfileinfo.bytes ; 
+                    if localfilesize ~= versionmatfiles{mat,4}
+                        if ~hasprintedmsg
+                            disp('Downloading files from GitHub-lfs including tutorial data files...')
+                            hasprintedmsg = true ; 
+                        end
+                        fprintf('Downloading file %s\n',versionmatfiles{mat,3}) ; 
+                        websave(versionmatfiles{mat,1},versionmatfiles{mat,3},webopts) ; 
+                    end
+                end
         end
-        [~,~,versionmatfiles] = microstate.functions.toolbox_path ; 
-        
-        for mat = 1:size(versionmatfiles,1)
-            
-            dodownload = ~versionmatfiles{mat,2} || (versionmatfiles{mat,2} && strcmp(option,'full')) ; 
-            if dodownload
-                
-                fprintf('Downloading file %s\n',versionmatfiles{mat,3}) ; 
-                websave(versionmatfiles{mat,1},versionmatfiles{mat,3},webopts) ; 
-            end
-            
-        end
+         
             
     case 'data'
         
         disp('Downloading tutorial data files from GitHub-lfs...')
         [~,~,versionmatfiles] = microstate.functions.toolbox_path ; 
-        
         for mat = 1:size(versionmatfiles,1)
-            
-            dodownload = versionmatfiles{mat,2} ; 
-            if dodownload
-                
-                fprintf('Downloading file %s\n',versionmatfiles{mat,3}) ; 
-                websave(versionmatfiles{mat,1},versionmatfiles{mat,3},webopts) ; 
-            end
-            
+            fprintf('Downloading file %s\n',versionmatfiles{mat,3}) ; 
+            websave(versionmatfiles{mat,1},versionmatfiles{mat,3},webopts) ; 
         end
         
 end    
