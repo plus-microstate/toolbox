@@ -1,7 +1,7 @@
 function [path,version,versionmatfiles] = toolbox_path() ; 
 
 path = fileparts(fileparts(which('microstate.functions.toolbox_path'))) ; 
-version = 'v1.2' ; 
+version = 'v1.3' ; 
 
 versionmatfiles = {...
 %     fullfile('+microstate','+external','HCP230','atlas','hcp230.mat') , false ; ...
