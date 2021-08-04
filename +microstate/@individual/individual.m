@@ -384,38 +384,39 @@ classdef individual
             % If it is a filename, we will import the header and convert
             % type to hdr
             if isfname
-                % Split the file
-                [path,name,ext] = fileparts(D) ; 
-                
-                % Check that either a .mat, .dat was supplied, or no
-                % extension was given
-                if ~isempty(ext) && ~any(strcmp(ext,{'.mat','.dat'}))
-                    error('Extension %s not recognised, please specify filename for either a .mat or .dat SPM file',ext) ; 
-                end
-                
-                % Check header file exists
-                hdrfile = fullfile(path,[name,'.mat']) ; 
-                if ~exist(hdrfile,'file')
-                    error('Cannot find SPM header file %s',hdrfile)
-                end
-                       
-                % Read and check header file
-                try
-                    D = load(hdrfile).D ;
-                catch
-                    error('Cannot read the SPM structure D from header file %s',hdrfile)
-                end
-                        
-                % Check the header file has the relevant fields
-                if ~isstruct(D)
-                    error('SPM header file %s should contain an SPM header structure called "D"',hdrfile) ; 
-                end
-                if ~all(isfield(D,{'channels','data','fname','path','sensors'}))
-                    error('SPM header file %s should contain an SPM header structure called "D"',hdrfile) ; 
-                end
-                
-                % Change datatype to hdr
-                datatype = 1 ; 
+                error('At present, we do not support reading SPM files. Use SPM to import the data and supply an SPM MEEG object. We are working on a fix for this.')
+%                 % Split the file
+%                 [path,name,ext] = fileparts(D) ; 
+%                 
+%                 % Check that either a .mat, .dat was supplied, or no
+%                 % extension was given
+%                 if ~isempty(ext) && ~any(strcmp(ext,{'.mat','.dat'}))
+%                     error('Extension %s not recognised, please specify filename for either a .mat or .dat SPM file',ext) ; 
+%                 end
+%                 
+%                 % Check header file exists
+%                 hdrfile = fullfile(path,[name,'.mat']) ; 
+%                 if ~exist(hdrfile,'file')
+%                     error('Cannot find SPM header file %s',hdrfile)
+%                 end
+%                        
+%                 % Read and check header file
+%                 try
+%                     D = load(hdrfile).D ;
+%                 catch
+%                     error('Cannot read the SPM structure D from header file %s',hdrfile)
+%                 end
+%                         
+%                 % Check the header file has the relevant fields
+%                 if ~isstruct(D)
+%                     error('SPM header file %s should contain an SPM header structure called "D"',hdrfile) ; 
+%                 end
+%                 if ~all(isfield(D,{'channels','data','fname','path','sensors'}))
+%                     error('SPM header file %s should contain an SPM header structure called "D"',hdrfile) ; 
+%                 end
+%                 
+%                 % Change datatype to hdr
+%                 datatype = 1 ; 
             end
                         
             
