@@ -1,7 +1,7 @@
 function [path,version,versionmatfiles] = toolbox_path() ; 
 
 path = fileparts(fileparts(which('microstate.functions.toolbox_path'))) ; 
-version = 'v1.3' ; 
+version = 'v1.4' ; 
 
 % Version updates
 % - Major update to tutorials into order matching manuscript, including
