@@ -129,6 +129,21 @@ classdef individual
             obj = microstate.functions.process_append(obj,'Exported +microstate structure') ; 
         end
         
+        % EDF Files
+        function [obj,hdr] = import_edf(obj,filename,modality,channels)
+            % Function to import data saved in .edf or .bdf
+            switch nargin
+                case {1,2}
+                    error('File name and modality must be supplied')
+                case 3
+                    [hdr,data] = microstate.external.edfread(filename) ; 
+                case 4
+                    [hdr,data] = microstate.external.edfread(filename,'targetsignals',channels) ;
+            end
+            
+            obj = obj.add_data(data',modality,hdr.samples(1)) ; 
+        end
+        
         % FIELDTRIP ---
         function obj = import_fieldtrip(obj,data,varargin)
             % Function to import data from Fieldtrip.

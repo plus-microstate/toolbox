@@ -180,18 +180,24 @@ function [objopt,kopt,kvec,maps,gev,label] = cluster_koptimum(obj,varargin)
             objopt.label = label(:,kvec==kopt)' ; 
             
         case 'CrossValidationIndex' % NEED TO UPDATE
-            varexpl = nan(options.kmax,1) ; % make a vector of cluster indices for each k value
+            gev = nan(options.kmax,1) ; % make a vector of cluster indices for each k value
             for k = options.kvec
                 fprintf('k=%d\n',k)
-                [C{k},varexpl(k),ij] = microstate_clustertopogs(xpeak,k,options) ; 
-                ind(:,k) = ij{1} ; 
+                out = obj.cluster_estimatemaps(k,options) ;
+                maps{k} = out.maps ; 
+                gev(k) = out.stats.gev ; 
+                label(:,k) = out.label ; 
             end 
-            varexpl = varexpl(options.kvec) ; C = C(options.kvec) ; ind = ind(:,options.kvec) ; 
-            [~,p] = size(xpeak) ; 
-            cvi = varexpl.*((p-1)./(p-1-options.kvec)').^2 ; 
+            gev = gev(options.kvec) ; maps = maps(options.kvec) ; label = label(:,options.kvec) ; 
+            p = size(obj.data,2) ; 
+            cvi = gev.*((p-1)./(p-1-options.kvec)').^2 ; 
             [~,k] = max(cvi) ;  
-            k = options.kvec(k) ; 
-            copt = C{find(options.kvec == k)} ; ropt = varexpl(find(options.kvec == k)) ; 
+            kopt = options.kvec(k) ; 
+            
+            objopt = obj ; 
+            objopt.maps = maps{kvec == kopt} ; 
+            objopt.stats.gev = gev(kvec==kopt) ; 
+            objopt.label = label(:,kvec==kopt)' ;
             
         case 'hmmFreeEnergy' % need to update
             

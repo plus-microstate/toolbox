@@ -447,7 +447,15 @@ function plt = plot(obj,param,varargin)
                         
                         % Plot
                         subplot(m,n,i)
-                        patch(p0) ; 
+                        patch(p0) ;
+                        
+                        % See if colour scale is specified
+                        idx_colscale = find(strcmpi(varargin,'cscale')) ;
+                        if isempty(idx_colscale)
+                            cscale = [0,1] ; 
+                        else
+                            cscale = varargin{idx_colscale+1} ; 
+                        end
                         
                         C = nan(length(p.vertices),1) ; 
                         for j = 1:length(layout.tissue) ; 
@@ -464,7 +472,7 @@ function plt = plot(obj,param,varargin)
 
                         ax = gca ; 
                         colormap(ax,cmap) ;
-                        caxis([0,max(abs(obj.globalmaps(:)))])
+                        caxis(cscale*max(abs(obj.globalmaps(:,i))))
                         
                         camlight headlight ; lighting gouraud ; material dull
                         

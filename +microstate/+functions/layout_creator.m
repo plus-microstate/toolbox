@@ -86,7 +86,7 @@ switch nargin
                 for i = 1:length(layout.tissue)
                     ind = find(strcmp(layout.tissue{i},tmplayout.tissuelabel)) ; 
                     if isempty(ind)
-                        error('Cannot find electrode labelled %s',layout.label{i}) ; 
+                        error('Cannot find electrode labelled %s',layout.tissue{i}) ; 
                     end
                     layout.Vertices{i,1} = find(tmplayout.tissue == ind) ; 
                     layout.Centroid = tmplayout.centroid(ind,:) ; 
