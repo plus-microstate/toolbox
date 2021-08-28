@@ -15,10 +15,13 @@ if d.bytes<150
 
             % Install the data
             datafile = fullfile(datadir,'tutorial5_data.mat') ;
-            url = ['https://github.com/plus-microstate/toolbox/raw/master/' datafile] ; 
-            url = replace(url,filesep,'/') ; 
-            url = replace(url,'+','%2B') ; 
+            url = 'https://github.com/plus-microstate/toolbox/raw/master/tutorials/tutorial5_Chi2_Stimulus_Response/tutorial5_data.mat' ; ;  
             webopts = weboptions('Timeout',120);
+            websave(datafile,url,webopts) ; 
+            
+            % Install the layout file
+            datafile = fullfile(datadir,'layout.mat') ;
+            url = 'https://github.com/plus-microstate/toolbox/raw/master/tutorials/tutorial5_Chi2_Stimulus_Response/layout.mat' ; ;  
             websave(datafile,url,webopts) ; 
             clear datafile url webopts answer
 

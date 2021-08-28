@@ -15,9 +15,7 @@ if d.bytes<150
 
             % Install the data
             datafile = fullfile(datadir,'tutorial1_data.mat') ;
-            url = ['https://github.com/plus-microstate/toolbox/raw/master/' datafile] ; 
-            url = replace(url,filesep,'/') ; 
-            url = replace(url,'+','%2B') ; 
+            url = 'https://github.com/plus-microstate/toolbox/raw/master/tutorials/tutorial1_RestingEEG_SingleSubj/tutorial1_data.mat' ; 
             webopts = weboptions('Timeout',120);
             websave(datafile,url,webopts) ; 
             clear datafile url webopts answer
