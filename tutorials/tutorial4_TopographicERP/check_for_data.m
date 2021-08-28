@@ -4,7 +4,8 @@ datadir = fullfile(fileparts(toolbox_path),'tutorials','tutorial4_TopographicERP
 addpath(datadir) % add this to the path
 
 % Check if the data is in the data directory
-if ~exist(fullfile(datadir,'tutorial4_data.mat'),'file')
+d = dir(fullfile(datadir,'tutorial4_data.mat')) ;
+if d.bytes<150
     answer = questdlg('Data for tutorial 4 has not been downloaded. Download now?',...
         'Download data?',...
         'Yes','No','Yes') ;
