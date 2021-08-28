@@ -1,6 +1,6 @@
 % Get location of the toolbox and specify data directory
 toolbox_path = microstate.functions.toolbox_path ; % location where the toolbox is installed
-datadir = fullfile(fileparts(toolbox_path),'tutorial','tutorial1_RestingEEG_SingleSubj') ; % path to folder containing the data
+datadir = fullfile(fileparts(toolbox_path),'tutorials','tutorial1_RestingEEG_SingleSubj') ; % path to folder containing the data
 addpath(datadir) % add this to the path
 
 % Check if the data is in the data directory
