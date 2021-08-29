@@ -260,7 +260,7 @@ function plot(obj,param,varargin)
                 k = size(obj.maps,2) ; 
                 while m*n < k
                     n=n+1 ; 
-                    while m*n < k
+                    if m*n < k
                         m=m+1 ; 
                     end
                 end
@@ -323,7 +323,7 @@ function plot(obj,param,varargin)
                 k = size(obj.maps,2) ; 
                 while m*n < k
                     n=n+1 ; 
-                    while m*n < k
+                    if m*n < k
                         m=m+1 ; 
                     end
                 end

@@ -311,7 +311,7 @@ function plt = plot(obj,param,varargin)
                 k = size(obj.globalmaps,2) ; 
                 while m*n < k
                     n=n+1 ; 
-                    while m*n < k
+                    if m*n < k
                         m=m+1 ; 
                     end
                 end
@@ -373,9 +373,9 @@ function plt = plot(obj,param,varargin)
                 m = 1 ; n = 1 ; 
                 k = size(obj.globalmaps,2) ; 
                 while m*n < k
-                    m=m+1 ; 
-                    while m*n < k
-                        n=n+1 ; 
+                    n=n+1 ; 
+                    if m*n < k
+                        m=m+1 ; 
                     end
                 end
                 

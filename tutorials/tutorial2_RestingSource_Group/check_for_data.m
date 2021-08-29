@@ -20,6 +20,14 @@ if ~exist(fullfile(datadir,'MEG-rest'),'dir')
             websave(datafile,url,webopts) ; 
             unzip(datafile,fullfile(datadir,'MEG-rest')) ;  
             delete(datafile)
+            
+            datafile = fullfile(datadir,'cluster_globalkoptimum_output.mat') ;
+            url = 'https://github.com/plus-microstate/toolbox/raw/master/tutorials/tutorial2_RestingSource_Group/cluster_globalkoptimum_output.mat' ; 
+            websave(datafile,url,webopts) ; 
+            
+            datafile = fullfile(datadir,'microstate_segmented_wpli.mat') ;
+            url = 'https://github.com/plus-microstate/toolbox/raw/master/tutorials/tutorial2_RestingSource_Group/microstate_segmented_wpli.mat' ; 
+            websave(datafile,url,webopts) ; 
             clear datafile url webopts answer
 
         case 'No'
