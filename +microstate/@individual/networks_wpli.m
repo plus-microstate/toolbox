@@ -1,4 +1,4 @@
-function nets = networks_wpli(obj,frq,keepstates,epochlength) ; 
+function nets = networks_wpli(obj,frq,keepstates,epochlength,staticflag) ; 
 % Calculate microstate segmented functional connectivity
 
     % check we have GFP, maps, and labels
@@ -19,6 +19,37 @@ function nets = networks_wpli(obj,frq,keepstates,epochlength) ;
     if nargin < 4
         epochlength = 1280 ; % 5 seconds at 256 Hz
     end
+    if nargin < 5
+        staticflag = false ; 
+    end
+    
+    
+    % --- SIMPLE CASE - STATIC NETWORK ---
+    if staticflag
+        % Calculate phase
+        if ~isempty(frq)
+            fobj = obj.preprocess_filter(frq(1),frq(2)) ; 
+        else
+            fobj = obj ; 
+        end
+        ph = angle(hilbert(fobj.data)) ; 
+        z = abs(hilbert(fobj.data)) ; 
+        clear fobj
+
+        % Epoch the data
+        window = 1:epochlength:size(ph,1) ; 
+        window = [window(1:end-1)' , window(2:end)'-1] ; 
+
+        % Loop over epochs 
+        for j = 1:size(window,1)
+            ind = window(j,1):window(j,2) ; 
+            nets = cat(3,nets,wpli(phi(ind,:),zi(ind,:))) ;
+        end
+        nets = mean(nets,3) ; 
+        return
+    end
+    
+    % --- MICROSTATE SEGMENTED FC ---
     
     % Number of states
     if ~isempty(obj.maps)
