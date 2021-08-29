@@ -52,7 +52,7 @@ else % update the files which need updating
         if contains(filename,'.mat') && ~isempty(regexp(filename,'example\d_','ONCE'))
             continue
         end
-
+        
         fprintf('Updating file %s\n',filename) ; 
 
         % Download
@@ -64,12 +64,23 @@ else % update the files which need updating
 
         streamCopier.copyStream(fileInputStream,fileOutputStream);  
         fileOutputStream.close ; 
-
-
+        
     end
 
     zipFile.close ;
     delete(tmpfile)
+end
+
+% Check for toolbox_path to get new version of .mat files to be
+% installed
+[~,~,versionmatfiles] = microstate.functions.toolbox_path() ; 
+for mat = 1:size(versionmatfiles,1)
+    % Check if the file exists
+    d = dir(versionmatfiles{mat,1}) ; 
+    if d.bytes<150 || versionmatfiles{mat,3}
+        fprintf('Downloading file %s\n',versionmatfiles{mat,2}) ; 
+        websave(versionmatfiles{mat,1},versionmatfiles{mat,2},webopts) ; 
+    end
 end
         
         
