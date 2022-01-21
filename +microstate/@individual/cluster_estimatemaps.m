@@ -215,6 +215,9 @@ function [obj,additionalout] = cluster_estimatemaps(obj,k,varargin)
         case 'ica'
             
             % do ica
+            path = microstate.functions.toolbox_path ;
+            warning('Adding fastica to path')
+            addpath(fullfile(path,'+external','FastICA_25')) ; 
             [~,~,maps,~] = evalc("fastica(obj.data','numOfIC',k)") ;
             
             % calculate gev
@@ -258,6 +261,9 @@ function [obj,additionalout] = cluster_estimatemaps(obj,k,varargin)
             end
             
             % HMM computation
+            path = microstate.functions.toolbox_path ;
+            warning('Adding HMM-MAR to path')
+            addpath(genpath(fullfile(path,'+external','HMM-MAR-master'))) ; 
             [hmm,~,~,viterbipath,~,~,fehist] = hmmmar(obj.data,size(obj.data,1),hmmopts);
             if any(strcmp(obj.modality,{'meg','eeg','source'}))
                 viterbipath = [nan(embeddedlag,1) ; viterbipath ; nan(embeddedlag,1)] ;

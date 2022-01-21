@@ -51,7 +51,7 @@ function obj = stats_mutualinformation(obj,miseq,atpeaks)
             HYXx = 0 ; 
             for y = 1:max(max(X,Y))
                 Pyx = sum(Yx == y)/length(Yx) ;
-                if Pyx ~= 0 
+                if ~isnan(Pyx) && Pyx ~= 0 
                     HYXx = HYXx+Pyx*log2(Pyx) ;
                 end
             end

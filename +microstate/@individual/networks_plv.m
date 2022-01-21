@@ -1,4 +1,4 @@
-function [p,confusionmat,nets] = networks_wpli(obj,frq,keepstates,epochlength,staticflag) ; 
+function [p,confusionmat,nets] = networks_plv(obj,frq,keepstates,epochlength,orthogonalize,Nperms) ; 
 % Calculate microstate segmented functional connectivity
 
     % check we have GFP, maps, and labels
@@ -13,43 +13,18 @@ function [p,confusionmat,nets] = networks_wpli(obj,frq,keepstates,epochlength,st
     if nargin < 2
         frq = []; 
     end
-    if nargin < 3
+    if nargin < 3 
         keepstates = false ; 
     end
     if nargin < 4
         epochlength = 1280 ; % 5 seconds at 256 Hz
     end
     if nargin < 5
-        staticflag = false ; 
+        orthogonalize = true ; 
     end
-    
-    
-    % --- SIMPLE CASE - STATIC NETWORK ---
-    if staticflag
-        % Calculate phase
-        if ~isempty(frq)
-            fobj = obj.preprocess_filter(frq(1),frq(2)) ; 
-        else
-            fobj = obj ; 
-        end
-        ph = angle(hilbert(fobj.data)) ; 
-        z = abs(hilbert(fobj.data)) ; 
-        clear fobj
-
-        % Epoch the data
-        window = 1:epochlength:size(ph,1) ; 
-        window = [window(1:end-1)' , window(2:end)'-1] ; 
-
-        % Loop over epochs 
-        for j = 1:size(window,1)
-            ind = window(j,1):window(j,2) ; 
-            nets = cat(3,nets,wpli(phi(ind,:),zi(ind,:))) ;
-        end
-        nets = mean(nets,3) ; 
-        return
+    if nargin < 6
+        Nperms = 200 ; 
     end
-    
-    % --- MICROSTATE SEGMENTED FC ---
     
     % Number of states
     if ~isempty(obj.maps)
@@ -59,8 +34,12 @@ function [p,confusionmat,nets] = networks_wpli(obj,frq,keepstates,epochlength,st
     end
     
     % Get durations and their labels
-    transition = find(diff(obj.label)) ; 
-    transition = [0,transition,length(obj.label)] ; 
+    if Nstates == 1
+        transition = [0,length(obj.label)] ; 
+    else
+        transition = find(diff(obj.label)) ; 
+        transition = [0,transition,length(obj.label)] ;
+    end
     states = [transition(1:end-1)'+1 , transition(2:end)'] ;
     dur = diff(states,[],2)+1 ; 
     
@@ -78,7 +57,6 @@ function [p,confusionmat,nets] = networks_wpli(obj,frq,keepstates,epochlength,st
         
         Nloop = Nloop+1 ; 
     end
-    
 
     % Get labels of states
     for i = 1:size(states,1)
@@ -91,8 +69,10 @@ function [p,confusionmat,nets] = networks_wpli(obj,frq,keepstates,epochlength,st
     else
         fobj = obj ; 
     end
+    if orthogonalize
+        fobj = fobj.preprocess_orthogonalize ; 
+    end
     ph = angle(hilbert(fobj.data)) ; 
-    z = abs(hilbert(fobj.data)) ; 
     clear fobj
     
     % Loop over microstates
@@ -103,11 +83,10 @@ function [p,confusionmat,nets] = networks_wpli(obj,frq,keepstates,epochlength,st
         ind = find(lbl == i) ; 
         
         % Loop over these states and concatenate
-        phi = [] ; zi = [] ; 
+        phi = [] ; 
         for j = 1:length(ind) 
             state = states(ind(j),:) ; 
             phi = [phi ; ph(state(1):state(2),:)] ; 
-            zi = [zi ; z(state(1):state(2),:)] ; 
 %             nets{i} = cat(3,nets{i},wpli(ph(state(1):state(2),:),z(state(1):state(2),:))) ; 
         end
         
@@ -122,7 +101,7 @@ function [p,confusionmat,nets] = networks_wpli(obj,frq,keepstates,epochlength,st
             msg = sprintf('Calculating wPLI for microstate %d of %d, epoch %d of %d',i,Nstates,j,size(window,1)) ; 
             fprintf(msg) ; 
             ind = window(j,1):window(j,2) ; 
-            nets{i} = cat(3,nets{i},wpli(phi(ind,:),zi(ind,:))) ;
+            nets{i} = cat(3,nets{i},plv(phi(ind,:))) ;
         end
         fprintf(repmat('\b',1,length(msg)))
         
@@ -140,17 +119,15 @@ function [p,confusionmat,nets] = networks_wpli(obj,frq,keepstates,epochlength,st
     
 end
 
-function C = wpli(ph,z)
-    % Vinck et al. (2011) NeuroImage 55:1547-1565
-    % Colclough et al. (2016) NeuroImage 138:284-293
+function C = plv(ph)
                      
-    % calculate wPLI
+    % calculate PLV
     n = size(ph,2) ; 
     C = zeros(n) ; 
     for i = 1:n
-        dphi = ph-ph(:,i) ; % repmat(x(:,i),1,n) ;
-        z1z2 = (z.*z(:,i)).*sin(dphi) ; % repmat(z(:,i),1,n) ;
-        C(i,:) = abs(mean(z1z2))./mean(abs(z1z2)) ; 
+        dphi = ph-ph(:,i) ; % phase difference
+        mean_ei_dphi = mean(exp(1i*dphi),1) ;  % <e^i*dphi>
+        C(:,i) = abs(mean_ei_dphi) ; % |<e^i*dphi>|
     end
 
-end % wPLI
+end 

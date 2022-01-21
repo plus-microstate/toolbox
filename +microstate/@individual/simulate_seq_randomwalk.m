@@ -27,7 +27,7 @@ function obj = simulate_seq_randomwalk(obj,varargin)
         options.Nsample = length(obj.time) ; 
         options.fsample = 1/mean(diff(obj.time)) ; 
     elseif ~hastime && hasNsample && hasfsample % make time axis from Nsample and fsample
-        obj.time = (1/options.fsample)*(0:(Nsample-1)) ; 
+        obj.time = (1/options.fsample)*(0:(options.Nsample-1)) ; 
     % - Deal with inputs we can work with -
     elseif hastime && hasNsample && ~hasfsample % Both Nsample and time specified, no fsample
         if options.Nsample ~= length(obj.time)

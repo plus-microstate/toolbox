@@ -43,7 +43,7 @@ function [xpeak,peaks,peak2sample] = cluster_get_gfppeaks(obj,nsample)
     if isempty(obj.data)
         error('Data must be supplied in the microstate.individual structure')
     end
-    xpeak = obj.data(peaks,:) ; 
+     xpeak = obj.data(peaks,:) ; 
     
     % Get peaks2ind
     if nsample ~= 1 && nargout == 3 % only valid case is if nsample = 1

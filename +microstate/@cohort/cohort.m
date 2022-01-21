@@ -409,6 +409,13 @@ classdef cohort
             end
         end
         
+        function obj = ind_stats_gev(obj)
+            % Run stats_gev for each individual
+            for i = 1:length(obj.individual)
+                obj.individual(i) = obj.individual(i).stats_gev ; 
+            end
+        end
+        
         function obj = ind_stats_gfp_peaksfreq(obj)
             % Run stats_gfp_peaksfrq for each individual
             for i = 1:length(obj.individual)
