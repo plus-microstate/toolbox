@@ -21,6 +21,7 @@ function [objopt,kopt,kvec,maps,gev,label] = cluster_koptimum(obj,varargin)
                 'findpeaks',true ; 
                 'kmin',2 ; 
                 'kmax',20 ; 
+                'keep_polarity',false ; 
                 } ;  
     % ensure that if either hmm or hmmFreeEnergy are input, the other is a
     % default

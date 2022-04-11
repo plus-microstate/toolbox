@@ -94,27 +94,29 @@ function pl = boxplot_LT(x,varargin) ;
     
     %% Plot points
     
-    % Loop over groups
-    for i = 1:Ngroups
+    if pl.plotPoints
+        % Loop over groups
+        for i = 1:Ngroups
 
-        idx = find(pl.Groups == grouplbls(i)) ; 
-        xm = x(idx) ;
+            idx = find(pl.Groups == grouplbls(i)) ; 
+            xm = x(idx) ;
 
-        % draw plot point locations from within the grid
-        y = rand(length(xm),1)-0.5 ; 
-        
-        % make distribution
-        dst = fitdist(xm,'kernel') ; 
-        yq = pdf(dst,xm) ; yq = 0.98*yq/max(yq) ; 
-        y = y.*yq ; 
+            % draw plot point locations from within the grid
+            y = rand(length(xm),1)-0.5 ; 
 
-        % plot
-        if iscell(pl.Points_MarkerFaceColor)
-            facecol = pl.Points_MarkerFaceColor{i} ; 
-        else
-            facecol = pl.Points_MarkerFaceColor(i,:) ; 
+            % make distribution
+            dst = fitdist(xm,'kernel') ; 
+            yq = pdf(dst,xm) ; yq = 0.98*yq/max(yq) ; 
+            y = y.*yq ; 
+
+            % plot
+            if iscell(pl.Points_MarkerFaceColor)
+                facecol = pl.Points_MarkerFaceColor{i} ; 
+            else
+                facecol = pl.Points_MarkerFaceColor(i,:) ; 
+            end
+            pl.handle.points(:,i) = plot(pl.GroupXAxis(i) + y,xm,pl.Points_Marker{i},'Color',pl.Points_MarkerLineColor(i,:),'MarkerFaceColor',facecol,'MarkerSize',pl.Points_MarkerSize(i)) ; 
         end
-        pl.handle.points(:,i) = plot(pl.GroupXAxis(i) + y,xm,pl.Points_Marker{i},'Color',pl.Points_MarkerLineColor(i,:),'MarkerFaceColor',facecol,'MarkerSize',pl.Points_MarkerSize(i)) ; 
     end
     
     
@@ -225,6 +227,7 @@ function pl = boxplot_LT(x,varargin) ;
 
         % Points options --- 
         pli = struct ; 
+        pli.plotPoints = true ; 
         pli.Points_MarkerSize = 4 ; 
         pli.Points_MarkerFaceColor = pl.GroupColors ; 
         pli.Points_MarkerLineColor = pl.plotLineColor ; 

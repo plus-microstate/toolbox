@@ -8,9 +8,12 @@ function obj = simulate_seq_randomwalk(obj,varargin)
     defaults = {'Nsample',[] ; 
                 'fsample',[] ; 
                 'Nstates',4 ; 
-                'Hurnst',0.71 ; 
+                'Hurst',0.71 ; 
                 'meandur',[] ; % will be set to 50 later if filterord wasn't specified
-                'filterord',[]} ; 
+                'filterord',[] ; 
+                'selectord','old' ; 
+                'mindur',0 ; 
+                'smoothpadding',1000} ; 
     options = microstate.functions.add_options(options,defaults) ; clear defaults
     
     
@@ -82,19 +85,50 @@ function obj = simulate_seq_randomwalk(obj,varargin)
     end
       
     for i = 1:options.Nstates-1 % loop over all random walks (there are always Nstates-1 randomwalks)
-        % Use the wavelet toolbox to generate fractal brownian motion with Hurnst exponent 0.71 [1] 
-        vi(i,:) = wfbm(options.Hurnst,options.Nsample+1) ; 
+        % Use the wavelet toolbox to generate fractal brownian motion with Hurst exponent 0.71 [1] 
+        vi(i,:) = wfbm(options.Hurst,options.Nsample+2*options.smoothpadding+1) ; 
     end
 
     % find filter order
     if isempty(options.filterord)
-        for filtord0 = 1:200
-            [err(filtord0),md(filtord0),v(filtord0,:)] = makev(filtord0,vi) ;  
+        if strcmpi(options.selectord,'ga')
+            optimopts = optimoptions('ga','MaxGenerations',5,'PlotFcn','gaplotscores','PopulationSize',20) ; 
+            filtord0 = ga(@(ord) makev(ord,vi),1,[],[],[],[],0,round(2*options.meandur*options.fsample),[],1,optimopts) ; 
+            [err,md,v] = makev(filtord0,vi) ;
+            options.filterord = filtord0 ; 
+        elseif strcmpi(options.selectord,'steps')
+            disp('Staircase to optimize mean microstate duration')
+            disp('Iteration     |     Filter order     |     Duration')
+            filtord0 = 2*round(options.meandur*options.fsample) ; 
+            orderstried = [] ; 
+            maxiter = 500 ; 
+            iter = 0 ; 
+            while (iter<maxiter) & ~any(orderstried==filtord0) ; 
+                iter = iter+1 ; 
+                orderstried(iter) = filtord0 ; 
+                msg = sprintf('%d',iter) ; 
+                msg = [msg,repmat(' ',1,14-length(msg)),'|     '] ; 
+                msg = sprintf('%s%d',msg,filtord0) ; 
+                msg = [msg,repmat(' ',1,37-length(msg)),'|     '] ; 
+                [err,md,v] = makev(filtord0,vi) ;
+                msg = sprintf('%s%.05f\n',msg,md) ; 
+                fprintf(msg); 
+                err = (md-options.meandur)*options.fsample ; 
+                step = -ceil(1e-1*err) ; 
+                filtord0 = max(filtord0+step , 1) ; 
+                
+            end
+            options.filterord = filtord0 ; 
+                
+        else
+            for filtord0 = 1:200
+                [err(filtord0),md(filtord0),v(filtord0,:)] = makev(filtord0,vi) ;  
+            end
+            err = smooth(err,20) ; 
+            [~,ind] = min(abs(err)) ; 
+            v = v(ind,:) ; 
+            options.filterord = ind ;
         end
-        err = smooth(err,20) ; 
-        [~,ind] = min(abs(err)) ; 
-        v = v(ind,:) ; 
-        options.filterord = ind ; 
     else
         v = makev(filterord,vi) ; 
     end
@@ -105,8 +139,12 @@ function obj = simulate_seq_randomwalk(obj,varargin)
         
     % Function to make + filter sequence
     function [err,md,v] = makev(filtord,vi0)
-
-        vi1 = movmean(vi0',filtord)'; 
+        % disp(num2str(filtord))
+        try
+            if filtord>0
+                vi1 = movmean(vi0',filtord)';
+            end
+        vi1 = vi1(:,(options.smoothpadding+1):(end-options.smoothpadding)) ; 
         x = diff(vi1,1,2)>0 ; 
 
 
@@ -147,13 +185,50 @@ function obj = simulate_seq_randomwalk(obj,varargin)
 
         [row,col] = find(V) ; 
         v(col) = row ; 
+        
+        % get durations
+        change = find(diff(v)) ; 
+        change = [1,change+1 ; change , length(v)]; 
+        dur = diff(change)/options.fsample ; 
+        % ind = find(dur<options.mindur) ;
+        [dur,ind2] = sort(dur) ; 
+        % ind = ind(ind2) ; 
+        while dur(1)<options.mindur
+            
+            try
+                selind = randi(2) ; 
+                sels = [v(change(2,ind2(1))+1) ; v(change(1,ind2(1))-1)];
+                v(change(1,ind2(1)):change(2,ind2(1))) = sels(selind) ; 
+            catch   
+            try
+                v(change(1,ind2(1)):change(2,ind2(1))) = v(change(2,ind2(1))+1) ;
+            catch
+                v(change(1,ind2(1)):change(2,ind2(1))) = v(change(1,ind2(1))-1) ;
+            end
+            end
+            
+            
+            change = find(diff(v)) ; 
+            change = [1,change+1 ; change , length(v)]; 
+            dur = diff(change)/options.fsample ; 
+            % ind = find(dur<options.mindur) ;
+            [dur,ind2] = sort(dur) ; 
+            % ind = ind(ind2) ; 
+        end
+            
 
         % get mean duration
-        md = mean(diff(find(diff(v)))/options.fsample) ;
-        err = md-options.meandur ; 
+        change = find(diff(v)) ;
+        change = [1,change+1 ; change , length(v)]; 
+        dur = diff(change)/options.fsample ;
+        md = mean(dur) ;
+        err = abs(md-options.meandur) ; 
 
         vi1 = [] ; 
 
+        catch
+            err = inf ; md = [] ; v = [] ; 
+        end
     end
 
 

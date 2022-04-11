@@ -1,6 +1,6 @@
-function [ordered_maps,map_similarity,order] = align_maps2template(maps,templates,modality)
+function [ordered_maps,map_similarity,order] = align_maps2template(maps,templates,modality,keep_polarity)
 
-simfun = microstate.functions.map_similarity_funhandle(modality) ; 
+simfun = microstate.functions.map_similarity_funhandle(modality,keep_polarity) ; 
 
 for iter = 1:size(templates,2)
     R = simfun(maps',templates') ; 

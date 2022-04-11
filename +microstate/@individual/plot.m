@@ -45,7 +45,16 @@ function plot(obj,param,varargin)
             xlim(ax,[obj.time(1) , obj.time(end)])
             ylim(ax,[min(min(obj.data+off)) , max(max(obj.data+off))]) ;
             xlabel(ax,'time')
-            ylabel(ax,obj.modality)
+            switch obj.modality
+                case 'eeg'
+                    ylabel('EEG')
+                case 'meg'
+                    ylabel('MEG')
+                case 'source'
+                    ylabel('Source data')
+                case 'ampenv'
+                    ylabel('Amplitude envelope')
+            end
             set(ax,'YTick',off) ; 
             set(ax,'YTickLabel',[])
             

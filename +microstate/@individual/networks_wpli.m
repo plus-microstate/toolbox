@@ -13,13 +13,13 @@ function [p,confusionmat,nets] = networks_wpli(obj,frq,keepstates,epochlength,st
     if nargin < 2
         frq = []; 
     end
-    if nargin < 3
+    if nargin < 3 || isempty(keepstates)
         keepstates = false ; 
     end
-    if nargin < 4
+    if nargin < 4 || isempty(epochlength)
         epochlength = 1280 ; % 5 seconds at 256 Hz
     end
-    if nargin < 5
+    if nargin < 5 || isempty(staticflag)
         staticflag = false ; 
     end
     
@@ -41,10 +41,12 @@ function [p,confusionmat,nets] = networks_wpli(obj,frq,keepstates,epochlength,st
         window = [window(1:end-1)' , window(2:end)'-1] ; 
 
         % Loop over epochs 
+        nets = [] ; 
         for j = 1:size(window,1)
             ind = window(j,1):window(j,2) ; 
-            nets = cat(3,nets,wpli(phi(ind,:),zi(ind,:))) ;
+            nets = cat(3,nets,wpli(ph(ind,:),z(ind,:))) ;
         end
+        p = [] ; confusionmat = [] ; 
         nets = mean(nets,3) ; 
         return
     end
@@ -81,6 +83,7 @@ function [p,confusionmat,nets] = networks_wpli(obj,frq,keepstates,epochlength,st
     
 
     % Get labels of states
+    lbl = [] ; 
     for i = 1:size(states,1)
         lbl(i,1) = obj.label(states(i,1)) ; 
     end
@@ -129,8 +132,10 @@ function [p,confusionmat,nets] = networks_wpli(obj,frq,keepstates,epochlength,st
     end
     
     % MVPA
-    [p,confusionmat] = microstate.functions.networks_mvpa(nets,Nperms) ; 
-    
+    p = [] ; confusionmat = [] ;
+%     Nperms = 1000 ; 
+%     [p,confusionmat] = microstate.functions.networks_mvpa(nets,Nperms) ; 
+%     
     % If just wanting the average, take this average
     for i = 1:Nstates
         if ~keepstates

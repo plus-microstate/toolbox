@@ -134,7 +134,7 @@ function [t,thresh] = DISSstat(obj,conditions)
     end
     
     % Calculate DISS
-    t = diag(microstate.functions.DISS(ERP{1}',ERP{2}',obj.individual(1).modality))' ;
+    t = diag(microstate.functions.DISS(ERP{1}',ERP{2}',obj.individual(1).modality,true))' ;
 
     % Get threshold
     thresh = min(t) + 0.5*(max(t)-min(t)) ;     

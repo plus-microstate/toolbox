@@ -1,20 +1,19 @@
 function [path,version,versionmatfiles] = toolbox_path() ; 
 
 % Version updates
-% - Major update to tutorials into order matching manuscript, including
-%   addition of resting-state group MEG tutorial. This also allows for
-%   download of resting and auditory stimulated MEG from the Open Science
-%   Framework
-% - Updated handling of downloads of tutorial data. Before all downloads of
-%   the main toolbox and tutorial data were handled by the install and
-%   toolbox_path functions. These functions now only handle download of the
-%   main toolox. Tutorial data is handled for download within each tutorial
-%   directory, meaning each tutorial dataset can be downloaded separately.
-% - Added import_edf function, including the external function edfread.m 
+% - Update allowing option to keep polarity when clustering in sensor
+%   space, useful for ERPs/ERFs.
+% - Updated methods for choosing filter order for smooth simulated random
+%   walk sequence. Default remains unchanged, but you can now use a GA or
+%   staircase method as well, which may be faster for long mean durations.
+% - Microstate networks now run MVPA by default and give p-value and
+%   confusion matrices as first and 2nd output. 
+% - Spatial filter added for sensor data. 
+% - Tutorials are updated to reflect these changes. 
 
 
 path = fileparts(fileparts(which('microstate.functions.toolbox_path'))) ; 
-version = 'v1.4' ; 
+version = 'v1.6' ; 
 
 % List the .mat files in this version of the toolbox
 % column 1: Location in toolbox

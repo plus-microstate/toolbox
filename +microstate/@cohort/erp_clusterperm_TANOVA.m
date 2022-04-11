@@ -50,6 +50,18 @@ else
     tend = inf ; 
 end
 
+
+idx = find(strcmp(varargin,'keep_polarity')) ; 
+if ~isempty(idx)
+    keep_polarity = varargin{idx+1} ; 
+else
+    if strcmpi(obj.individual(1).modality,'eeg')
+        keep_polarity = true ; 
+    else
+        keep_polarity = false ; 
+    end
+end
+
 % Make a within or between design flag
 switch design
     case 'between'
@@ -68,7 +80,7 @@ obj = microstate.functions.select_time(obj,[tstart,tend]) ;
 %% Run the analysis
         
 % Get the maximal cluster statistic
-[t,thresh] = DISSstat(obj,conditions) ; 
+[t,thresh] = DISSstat(obj,conditions,keep_polarity) ; 
 [T,samples] = max_cluster_stat(t,thresh) ; 
 
 % Run permutations
@@ -107,7 +119,7 @@ for perm = 2:Nperms
     end
 
     % Get the maximal cluster statistic
-    [ts(perm,:),~] = DISSstat(objp,conditions) ; 
+    [ts(perm,:),~] = DISSstat(objp,conditions,keep_polarity) ; 
     Ts(perm) = max_cluster_stat(ts(perm,:),thresh) ; 
 
 end
@@ -128,7 +140,7 @@ end
 
 
 %% Helper functions
-function [t,thresh] = DISSstat(obj,conditions)
+function [t,thresh] = DISSstat(obj,conditions,keep_polarity)
 
     % Calculate group average ERPs
     for i = 1:2 % Loop over conditions
@@ -139,7 +151,7 @@ function [t,thresh] = DISSstat(obj,conditions)
     end
     
     % Calculate DISS
-    t = diag(microstate.functions.DISS(ERP{1},ERP{2},obj.individual(1).modality))' ;
+    t = diag(microstate.functions.DISS(ERP{1},ERP{2},obj.individual(1).modality,keep_polarity))' ; % keep polarity
 
     % Get threshold
     thresh = min(t) + 0.5*(max(t)-min(t)) ;     

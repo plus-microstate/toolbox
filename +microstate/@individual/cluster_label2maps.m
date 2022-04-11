@@ -1,8 +1,11 @@
-function [obj,mapsim] = cluster_label2maps(obj,usepeaks)
+function [obj,mapsim] = cluster_label2maps(obj,usepeaks,keep_polarity)
 % Calculate centroid maps given data and microstate labels
 
 %%  Check inputs
 
+    if nargin < 3
+        keep_polarity = false ; 
+    end
     if nargin < 2
         usepeaks = true ; 
     end
@@ -65,6 +68,11 @@ function [obj,mapsim] = cluster_label2maps(obj,usepeaks)
             [V,D] = eig(Xj'*Xj) ; 
             [~,indmax] = max(diag(D)) ; % should just be the biggest value, but put this in in case
             v1 = V(:,indmax) ; % get first eigenvector
+            
+            if keep_polarity
+                C = v1'*Xj' ; 
+                v1 = sign(mean(C))*v1 ; 
+            end
         end
         c(i,:) = centfun(v1) ; % assign as centroid
         

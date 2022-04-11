@@ -9,6 +9,7 @@ function [objopt,kopt,kvec,maps,gev] = cluster_globalkoptimum(obj,varargin)
                 'kmeans_replicates',20 ;  
                 'hmm',struct ; 
                 'cohortstat','data' ; % data or maps
+                'keep_polarity',false ; 
                 } ;  
     options = microstate.functions.add_options(options,defaults) ; clear defaults
     

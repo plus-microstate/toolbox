@@ -9,6 +9,7 @@ function [obj,additionalout] = cluster_global(obj,k,varargin)
                 'kmeans_replicates',20 ;  
                 'hmm',struct ; 
                 'cohortstat','data' ; % data or maps
+                'keep_polarity',false ; 
                 } ;  
     options = microstate.functions.add_options(options,defaults) ; clear defaults
     
@@ -52,7 +53,7 @@ function [obj,additionalout] = cluster_global(obj,k,varargin)
         case 'maps'
             X = [] ; 
             for i = 1:length(obj.individual)
-                X = [X ; obj.individual(i).maps] ; 
+                X = [X ; obj.individual(i).maps'] ; 
             end
     end
     

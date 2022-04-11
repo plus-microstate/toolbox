@@ -11,8 +11,12 @@ function [obj,additionalout] = cluster_estimatemaps(obj,k,varargin)
                 'findpeaks',true ; 
                 'nsample',1 ;
                 'hmm',struct ; 
+                'keep_polarity',false ; 
                 } ;  
     options = microstate.functions.add_options(options,defaults) ; clear defaults
+    if options.keep_polarity
+        options.findpeaks = false ; 
+    end
     
     % validate options
     validateattributes(options.kmeans_maxiter,{'numeric'},{'scalar','integer'},'microstate.clustertopogs','options.maxiter')
@@ -46,20 +50,34 @@ function [obj,additionalout] = cluster_estimatemaps(obj,k,varargin)
             switch obj.modality
                 case 'eeg'
                     x = x-mean(x,2) ; % re-reference to average
-                    distfun = @(x,c) 1-abs( (x./vecnorm(x,2,2)) * ((c-mean(c,2))./vecnorm((c-mean(c,2)),2,2))' )' ; 
+                    if options.keep_polarity
+                        distfun = @(x,c) 1-( (x./vecnorm(x,2,2)) * ((c-mean(c,2))./vecnorm((c-mean(c,2)),2,2))' )' ;
+                    else
+                        distfun = @(x,c) 1-abs( (x./vecnorm(x,2,2)) * ((c-mean(c,2))./vecnorm((c-mean(c,2)),2,2))' )' ; 
+                    end
                     centfun = @(v1) v1 ; 
                 case 'meg'
                     % do nothing
-                    distfun = @(x,c) 1-abs( (x./vecnorm(x,2,2)) * (c./vecnorm(c,2,2))' )' ; 
+                    if options.keep_polarity
+                        distfun = @(x,c) 1-( (x./vecnorm(x,2,2)) * (c./vecnorm(c,2,2))' )' ; 
+                    else
+                        distfun = @(x,c) 1-abs( (x./vecnorm(x,2,2)) * (c./vecnorm(c,2,2))' )' ; 
+                    end
                     centfun = @(v1) v1 ; 
                 case 'source'
                     x = abs(x) ; % .^2 ; % set to magnitude
                     distfun = @(x,c) 1-( (x./vecnorm(x,2,2)) * (c./vecnorm(c,2,2))' )' ;
                     centfun = @(v1) abs(v1) ; 
+                    if options.keep_polarity
+                        warning('For source/amplitude envelope data, keep_polarity has no effect and polarity is always ignored.') ; 
+                    end
                 case 'ampenv'
                     % do nothing
                     distfun = @(x,c) 1-( (x./vecnorm(x,2,2)) * (c./vecnorm(c,2,2))' )' ; 
                     centfun = @(v1) abs(v1) ; 
+                    if options.keep_polarity
+                        warning('For source/amplitude envelope data, keep_polarity has no effect and polarity is always ignored.') ; 
+                    end
             end
     
             % Initialize explained variance
@@ -124,6 +142,10 @@ function [obj,additionalout] = cluster_estimatemaps(obj,k,varargin)
                             [V,D] = eig(Xj'*Xj) ; 
                             [~,indmax] = max(diag(D)) ; % should just be the biggest value, but put this in in case
                             v1 = V(:,indmax) ; % get first eigenvector
+                            if options.keep_polarity
+                                C = v1'*Xj' ; 
+                                v1 = sign(mean(C))*v1 ; 
+                            end
                         end
                         if err
                             break
@@ -159,7 +181,7 @@ function [obj,additionalout] = cluster_estimatemaps(obj,k,varargin)
                 end
                 
                 progcount = options.kmeans_maxiter*rep ; 
-                figure(progfig) ; 
+                % figure(progfig) ; 
                 cla
                 bar(progax,1,progcount,'r','LineStyle','none') ; 
                 ylim([0,options.kmeans_maxiter*options.kmeans_replicates])
@@ -184,7 +206,7 @@ function [obj,additionalout] = cluster_estimatemaps(obj,k,varargin)
 
                 % calculate gev
                 obj.maps = c' ; % put the maps into the object
-                obj = obj.cluster_alignmaps(options.findpeaks) ; % align maps to data
+                obj = obj.cluster_alignmaps(options.findpeaks,'keep_polarity',options.keep_polarity) ; % align maps to data
                 obj = obj.stats_gev ; % get gev
                 if obj.stats.gev > gev % if explained variance greater than previous maximum, replace
                     gev = obj.stats.gev ; % update maximum gev
@@ -192,14 +214,14 @@ function [obj,additionalout] = cluster_estimatemaps(obj,k,varargin)
                 end
             end
             
-            figure(progfig)
-            cla
-            clf(progfig), plot([],[])
+%             figure(progfig)
+%             cla
+%             clf(progfig), plot([],[])
             close(progfig) ; 
             
             % assign to object
             obj.maps = maps' ; % assign maps
-            obj = obj.cluster_alignmaps(options.findpeaks) ; % align to data % RETEST TO CHECK!!!
+            [obj,additionalout] = obj.cluster_alignmaps(options.findpeaks,'keep_polarity',options.keep_polarity) ; % align to data % RETEST TO CHECK!!!
             obj = obj.stats_gev ; % get gev
             
         case 'pca'

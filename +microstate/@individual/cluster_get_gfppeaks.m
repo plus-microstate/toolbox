@@ -81,7 +81,7 @@ function [xpeak,peaks,peak2sample] = cluster_get_gfppeaks(obj,nsample)
         end
         
         numpeaks = nsample ; % get number of peaks
-        peaks = randperm(size(xpeaks,1),numpeaks) ; % select some peaks
+        peaks = randperm(size(xpeak,1),numpeaks) ; % select some peaks
         xpeak = xpeak(peaks,:) ; % extract those peaks
 
 
