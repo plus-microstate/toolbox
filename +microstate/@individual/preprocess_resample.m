@@ -8,9 +8,12 @@ function obj = preprocess_resample(obj,fsample_new)
     if fsample_old == fsample_new
         return
     end
+    
+    % remove mean
+    mx = mean(obj.data) ; 
 
     % resample
-    obj.data = resample(obj.data,round(fsample_new),round(fsample_old)) ; 
+    obj.data = resample(obj.data-mx,round(fsample_new),round(fsample_old))+mx ; 
     tnew = (1/fsample_new)*(0:(size(obj.data,1)-1)) + obj.time(1) ;
     
     % recalculate microstate labels

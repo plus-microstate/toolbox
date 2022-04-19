@@ -7,6 +7,7 @@ function obj = preprocess_filter(obj,flow,fhigh,varargin)
     % default options
     defaults = {'type','pass' ; % pass or stop
                 'order',2 ; % 4th order
+                'demean',false ; % add mean back to data
                 } ; 
     options = microstate.functions.add_options(options,defaults) ; clear defaults
 
@@ -47,7 +48,9 @@ function obj = preprocess_filter(obj,flow,fhigh,varargin)
     x_filt = filtfilt(b,a,obj.data) ; 
     
     % add means back 
-    obj.data = x_filt+repmat(mx,m,1) ; 
+    if ~options.demean
+        obj.data = x_filt+repmat(mx,m,1) ;
+    end
     
     % add path back if needs be
     if onpath

@@ -10,6 +10,10 @@ function [path,version,versionmatfiles] = toolbox_path() ;
 %   confusion matrices as first and 2nd output. 
 % - Spatial filter added for sensor data. 
 % - Tutorials are updated to reflect these changes. 
+% - Fix to resampling function to avoid edge artifacts from non-zero mean
+%   time series. 
+% - Filter allows option to demean, and new preprocessing function for
+%   demeaning added. 
 
 
 path = fileparts(fileparts(which('microstate.functions.toolbox_path'))) ; 
