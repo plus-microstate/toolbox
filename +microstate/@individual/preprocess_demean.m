@@ -5,7 +5,6 @@ function obj = preprocess_demean(obj) ;
     end
     obj.data = obj.data-mean(obj.data,1) ; 
 
-    options.msg = msg ; 
-    obj = microstate.functions.process_append(obj,'Applied re-reference',options) ;
+    obj = microstate.functions.process_append(obj,'Applied re-reference') ;
 
 end
