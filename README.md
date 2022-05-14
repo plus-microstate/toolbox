@@ -61,7 +61,7 @@ For queries about use of the toolbox, feedback, suggestions, or interest in coll
 ## Publications
 
 - Tait and Zhang (2022), _MEG cortical microstates: spatiotemporal characteristics, dynamic functional connectivity and stimulus-evoked responses_, NeuroImage 251:119006. doi: [10.1016/j.neuroimage.2022.119006](https://doi.org/10.1016/j.neuroimage.2022.119006). 
-Preprint describing the methods underpinning the toolbox. 
+Paper describing the methods underpinning the toolbox. 
 - Tait and Zhang (2021), _+microstate: A MATLAB toolbox for brain microstate analysis in sensor and cortical EEG/MEG_, bioRxiv 2021.07.13.452193. doi: [10.1101/2021.07.13.452193](https://doi.org/10.1101/2021.07.13.452193). 
 Preprint describing the format of the toolbox and tutorials. 
 - Tait et al. (2020) _EEG microstate complexity for aiding early diagnosis of Alzheimer’s disease_, Sci Rep 10:17627. doi: [10.1038/s41598-020-74790-7](https://doi.org/10.1038/s41598-020-74790-7). 
