@@ -37,7 +37,7 @@ For your first microstate analysis using +microstate, we recommend working throu
 For extra help, you can refer to the following resources: 
 - [Toolbox manuscript](https://doi.org/10.1101/2021.07.13.452193)
 - [Wiki pages](https://github.com/plus-microstate/toolbox/wiki)
-- [Our original paper](https://doi.org/10.1101/2021.03.25.436979) - particularly Supplementary Material - for methodological details 
+- [Our original paper](https://doi.org/10.1016/j.neuroimage.2022.119006) - particularly Supplementary Material - for methodological details 
 
 ## Citing the toolbox
 If you use the +microstate toolbox in your analysis, please cite the toolbox paper (reference given below) and include the URL to the toolbox webpage. 
