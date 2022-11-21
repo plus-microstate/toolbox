@@ -4,7 +4,7 @@ function [path,version,versionmatfiles] = toolbox_path() ;
 % - Fixed bug with plotting Neuromag MEG sensors
 
 % Previous version updates: 
-% v1.6
+% Version 1.6
 % - Update allowing option to keep polarity when clustering in sensor
 %   space, useful for ERPs/ERFs.
 % - Updated methods for choosing filter order for smooth simulated random
