@@ -1,6 +1,10 @@
 function [path,version,versionmatfiles] = toolbox_path() ; 
 
-% Version updates
+% Version 1.7 updates
+% - Fixed bug with plotting Neuromag MEG sensors
+
+% Previous version updates: 
+% v1.6
 % - Update allowing option to keep polarity when clustering in sensor
 %   space, useful for ERPs/ERFs.
 % - Updated methods for choosing filter order for smooth simulated random
@@ -17,7 +21,7 @@ function [path,version,versionmatfiles] = toolbox_path() ;
 
 
 path = fileparts(fileparts(which('microstate.functions.toolbox_path'))) ; 
-version = 'v1.6' ; 
+version = 'v1.7' ; 
 
 % List the .mat files in this version of the toolbox
 % column 1: Location in toolbox
@@ -37,7 +41,7 @@ versionmatfiles = {...
     fullfile('+microstate','+external','fieldtrip','template','layout','CTF151.mat'),[],false ;...
     fullfile('+microstate','+external','fieldtrip','template','layout','CTF275.mat'),[],false ;...
     fullfile('+microstate','+external','fieldtrip','template','layout','EEG1005.mat'),[],false ;...
-    fullfile('+microstate','+external','fieldtrip','template','layout','neuromag306.mat'),[],false} ; 
+    fullfile('+microstate','+external','fieldtrip','template','layout','neuromag306.mat'),[],true} ; 
 
 for mat = 1:size(versionmatfiles,1)
     
